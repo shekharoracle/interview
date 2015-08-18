@@ -1,6 +1,8 @@
 package org.interview.math;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 
 
 /**
@@ -19,11 +21,90 @@ import java.util.ArrayList;
  * 1. Reverse Integer
  * 2. Palindrome Number (Reverse and compare)
  * 3. Pow(x, y)
+ * 4. Sub Set : 
+ * 5. Factorial Trailing Zeros : Number of zeros in n!?
+ * 6. Is Happy Number : repeated sum of digit is 1.
+ * 
+ * TODO : 
+ * 1. Write a programme to put () around repeated decimal number example : 5/7 = 0.(*****)
+ * 2. Plus One : to list of digits.
+ * 
  *
  */
 
 public class MathUtil {
 	
+	
+	public boolean isHappy(int n) throws InterruptedException{
+		
+		HashSet<Integer> numberList = new HashSet<Integer>();
+		
+		while(!numberList.contains(n)){
+			numberList.add(n);
+			n = sumOfDigit(n);
+			System.out.println(""+n);
+			if(n == 1)return true;
+			Thread.sleep(2000);
+		}
+		return false;
+	}
+/**
+ * 
+ * @param n
+ * @return
+ */
+	private int sumOfDigit(int n) {
+		int sum = 0;
+		while(n != 0){
+			int mod = n % 10;
+			sum = sum + (int)pow(mod, 2);
+			n = n /10;
+		}
+		return sum;
+	}
+
+	public int numberOfZeros(int n){
+		if(n < 5)return 0;
+		
+		int count = 0;
+		
+		for(int i = 5; n/i >= 1 ; i*=5){
+			count += n/i;
+		}
+		return count;
+	}
+	public void SubSet(int[] S){
+		
+		
+		Arrays.sort(S);
+		ArrayList<ArrayList<Integer>> result = new ArrayList<ArrayList<Integer>>();
+		
+		for(int i=0; i < S.length ; i++){
+			ArrayList<ArrayList<Integer>> temp = new ArrayList<ArrayList<Integer>>();
+			for(ArrayList<Integer> a : result){
+				temp.add(new ArrayList<Integer>(a));
+			}
+			System.out.println("1 "+temp);
+			
+			for(ArrayList<Integer> a : temp){
+				a.add(S[i]);
+			}
+			
+			System.out.println("2 "+temp);
+			
+			//add S[i] only as a set
+			ArrayList<Integer> single = new ArrayList<Integer>();
+			single.add(S[i]);
+			temp.add(single);
+			
+			System.out.println("3 "+temp);
+			result.addAll(temp);
+			
+			System.out.println("======");
+		}
+		
+		System.out.println("Result : "+result);
+	}
 	
 	public double pow(int x, int y){
 		if(y == 0)return 1;
@@ -125,6 +206,7 @@ public class MathUtil {
 
 	public static void main(String[] args) {
 		MathUtil mathUtil = new MathUtil();
+		
 		mathUtil.isDivisible(7371, 7);
 		mathUtil.generateAllPrimeNumber(50);
 		System.out.println(""+mathUtil.isPowerOfTwo(64));
@@ -136,6 +218,50 @@ public class MathUtil {
 		
 		System.out.println("Power of 2 : "+mathUtil.pow(2, -2));
 		
+		int[] arr = {1, 2, 3};
+		mathUtil.SubSet(arr);
+		
+		System.out.println("# of trailing zero : "+mathUtil.numberOfZeros(26));
+		
+		
+		try {
+			System.out.println("is Happy # : "+mathUtil.isHappy(5));
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
+/**
+ * Temp Code for Fractional decimal point : 
+ * int num = 5;
+		int den = 7;
+		
+		long res = num/den;
+		long rem = (num % den)*10;
+		String result = String.valueOf(res);
+		result = result + ".";
+		System.out.println(""+res);
+		System.out.println(""+rem);
+		Map<Long, Integer> map = new HashMap<Long, Integer>();
+		
+		while(rem != 0){
+			System.out.println("Reminder : "+rem);
+			
+			if(map.containsKey(rem)){
+				int beg = map.get(rem);
+				String part1 = result.substring(0, beg);
+				String part2 = result.substring(beg, result.length());
+				result = part1 + "(" + part2 +")";
+				System.out.println(""+result);
+				break;
+			}
+			map.put(rem, result.length());
+			res = rem /den;
+			result += String.valueOf(res);
+			rem = (rem % den) * 10;
+		}
+ * 
+ */
+
